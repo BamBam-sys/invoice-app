@@ -1,26 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { Invoices, ViewInvoice } from './pages';
+import data from './data.json';
+import { useAppDispatch } from './store/hooks';
+import { invoicesReceived } from './store/invoicesReducer';
 import './App.css';
 
-function App() {
+const App: React.FC = () => {
+  const dispatch = useAppDispatch();
+
+  // load invoices to the redux store
+  useEffect(() => {
+    dispatch(invoicesReceived(data));
+  }, [dispatch]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path="/" element={<Invoices />} />
+      <Route path="/view/:id" element={<ViewInvoice />} />
+    </Routes>
   );
-}
+};
 
 export default App;
