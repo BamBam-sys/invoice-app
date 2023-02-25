@@ -1,20 +1,54 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { GoBack, Tag } from '../common';
-import { ItemSummary, Sidebar } from '../components';
-import { useAppSelector } from '../store/hooks';
-import { selectInvoice } from '../store/invoicesReducer';
+import { EditInvoice, ItemSummary, Sidebar } from '../components';
+import Modal from '../components/Modal';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import {
+  invoiceDeleted,
+  invoiceMarkedAsPaid,
+  selectInvoice,
+} from '../store/invoicesReducer';
 import Button from './../common/Button';
 
-const ViewInvoice = () => {
+const ViewInvoice: React.FC = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
+  const dispatch = useAppDispatch();
   const state = useAppSelector((state) => state);
-  const [invoice] = selectInvoice(state, id!);
+  const invoice = selectInvoice(state, id!);
+
+  const [panel, setPanel] = useState<boolean>(false);
+  const [modal, setModal] = useState<boolean>(false);
+
+  const handleClick = () => {
+    setPanel((prev) => !prev);
+  };
+
+  const deleteInvoice = () => {
+    dispatch(invoiceDeleted(id!));
+    navigate('/');
+  };
+
+  const markInvoiceAsPaid = () => {
+    dispatch(invoiceMarkedAsPaid(id!));
+  };
 
   return (
     <div className={`flex flex-col sm:flex-row`}>
       {/* <div className="h-[100vh]"> */}
+      {modal && (
+        <Modal setModal={setModal} deleteInvoice={deleteInvoice} id={id!} />
+      )}
       <Sidebar />
+      <EditInvoice
+        panel={panel}
+        setPanel={setPanel}
+        handleClick={handleClick}
+      />
+      {panel && (
+        <div className="h-[100vh] w-[51%]  absolute right-0 z-[1] "></div>
+      )}
       {/* </div> */}
       {invoice && (
         <div className="w-full ">
@@ -27,9 +61,23 @@ const ViewInvoice = () => {
                 <Tag status={invoice.status} />
               </div>
               <div className="hidden ss:flex ss:items-center ss:gap-[0.8rem] ">
-                <Button text={'Edit'} colors={'editBtn'} />
-                <Button text={'Delete'} colors={'deleteBtn'} />
-                <Button text={'Mark as Paid'} colors={'markBtn'} />
+                <Button
+                  text={'Edit'}
+                  colors={'editBtn'}
+                  handleClick={handleClick}
+                />
+                <Button
+                  text={'Delete'}
+                  colors={'deleteBtn'}
+                  handleClick={() => setModal(true)}
+                />
+                {invoice.status === 'paid' ? null : (
+                  <Button
+                    text={'Mark as Paid'}
+                    colors={'markBtn'}
+                    handleClick={markInvoiceAsPaid}
+                  />
+                )}
               </div>
             </div>
             {/* section two */}
@@ -127,9 +175,17 @@ const ViewInvoice = () => {
             {/* section three (mobile) */}
           </div>
           <div className="flex ss:hidden items-center justify-between bg-variant py-[2.2rem] px-[2.4rem] mt-[5.6rem] ">
-            <Button text={'Edit'} colors={'editBtn'} />
-            <Button text={'Delete'} colors={'deleteBtn'} />
-            <Button text={'Mark as Paid'} colors={'markBtn'} />
+            <Button text={'Edit'} colors={'editBtn'} handleClick={() => {}} />
+            <Button
+              text={'Delete'}
+              colors={'deleteBtn'}
+              handleClick={() => {}}
+            />
+            <Button
+              text={'Mark as Paid'}
+              colors={'markBtn'}
+              handleClick={() => {}}
+            />
           </div>
         </div>
       )}

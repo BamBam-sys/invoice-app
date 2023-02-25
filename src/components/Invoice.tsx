@@ -12,7 +12,7 @@ const Invoice: React.FC<props> = ({ invoice }) => {
   return (
     <Link
       to={`/view/${invoice.id}`}
-      className=" grid grid-cols-2 ss:grid-cols-5 ss:items-center  p-[2.4rem] bg-variant rounded-[8px] shadow-two hover:border border-primary-50 cursor-pointer"
+      className=" grid grid-cols-2 ss:grid-cols-5 ss:items-center  p-[2.4rem] bg-variant rounded-[8px] shadow-two border  border-transparent hover:border-primary-50 cursor-pointer"
     >
       <div className="h3 mb-[2.4rem] ss:mb-0 dark:text-white">
         <span className="text-primary-400">#</span> {invoice.id}

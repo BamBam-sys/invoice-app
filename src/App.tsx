@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Invoices, ViewInvoice } from './pages';
 import data from './data.json';
@@ -10,9 +10,7 @@ const App: React.FC = () => {
   const dispatch = useAppDispatch();
 
   // load invoices to the redux store
-  useEffect(() => {
-    dispatch(invoicesReceived(data));
-  }, [dispatch]);
+  dispatch(invoicesReceived(data));
 
   return (
     <Routes>

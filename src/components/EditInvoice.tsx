@@ -4,8 +4,9 @@ import { InvoiceType } from '../interfaces';
 import Item from './Item';
 import { ReactComponent as PlusIcon } from '../assets/icon-plus.svg';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { invoiceReceived, selectInvoices } from '../store/invoicesReducer';
+import { invoiceUpdated, selectInvoice } from '../store/invoicesReducer';
 import { calculatePaymentDue, formatDate, useOnClickOutside } from '../utils';
+import { useParams } from 'react-router-dom';
 
 type props = {
   handleClick: () => void;
@@ -13,53 +14,16 @@ type props = {
   setPanel: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const CreateInvoice: React.FC<props> = ({ panel, handleClick, setPanel }) => {
+const EditInvoice = ({ panel, handleClick, setPanel }: props) => {
   const dispatch = useAppDispatch();
 
-  // form state
-  const [input, setInput] = useState<InvoiceType>({
-    id: '',
-    createdAt: formatDate(new Date()),
-    paymentDue: calculatePaymentDue(30, new Date()),
-    description: '',
-    paymentTerms: 30,
-    clientName: '',
-    clientEmail: '',
-    status: '',
-    senderAddress: {
-      street: '',
-      city: '',
-      postCode: '',
-      country: '',
-    },
-    clientAddress: {
-      street: '',
-      city: '',
-      postCode: '',
-      country: '',
-    },
-    items: [],
-    total: '',
-  });
+  const { id } = useParams();
 
   const state = useAppSelector((state) => state);
-  const invoices = selectInvoices(state);
+  const invoice = selectInvoice(state, id!);
 
-  const IDs = invoices.map((invoice) => invoice.id);
-
-  // generate unique ID
-  function generateID() {
-    const prefix = 'RT';
-    let suffix = '';
-
-    do {
-      suffix = Math.floor(Math.random() * 10000)
-        .toString()
-        .padStart(4, '0');
-    } while (IDs.includes(prefix + suffix));
-
-    return prefix + suffix;
-  }
+  // form state
+  const [input, setInput] = useState<InvoiceType>(invoice);
 
   // add item to item list
   const handleAddItem = () => {
@@ -138,44 +102,18 @@ const CreateInvoice: React.FC<props> = ({ panel, handleClick, setPanel }) => {
   };
 
   const resetForm = () => {
-    setInput({
-      id: '',
-      createdAt: '2023-02-21',
-      paymentDue: calculatePaymentDue(30, new Date()),
-      description: '',
-      paymentTerms: 30,
-      clientName: '',
-      clientEmail: '',
-      status: '',
-      senderAddress: {
-        street: '',
-        city: '',
-        postCode: '',
-        country: '',
-      },
-      clientAddress: {
-        street: '',
-        city: '',
-        postCode: '',
-        country: '',
-      },
-      items: [],
-      total: '',
-    });
-
+    setInput(invoice);
     setPanel(false);
   };
 
   // on save
-  const handleSave = (status: string) => {
+  const handleSave = () => {
     setInput((prev) => ({
       ...prev,
       paymentDue: calculatePaymentDue(
         input.paymentTerms,
         new Date(input.createdAt)
       ),
-      id: generateID(),
-      status,
       total: input.items
         .reduce(
           (accumulator, currentValue) =>
@@ -186,10 +124,8 @@ const CreateInvoice: React.FC<props> = ({ panel, handleClick, setPanel }) => {
     }));
 
     dispatch(
-      invoiceReceived({
+      invoiceUpdated({
         ...input,
-        id: generateID(),
-        status,
         paymentDue: calculatePaymentDue(
           input.paymentTerms,
           new Date(input.createdAt)
@@ -221,7 +157,10 @@ const CreateInvoice: React.FC<props> = ({ panel, handleClick, setPanel }) => {
     >
       <div className="h-[86%] p-[2.4rem]  sm:pl-[11rem]">
         <div className="flex justify-between items-center mb-[2.4rem]">
-          <div className="h5 dark:text-white">New Invoice</div>
+          <div className="h5 dark:text-white">
+            Edit <span className="text-primary-400 ">#</span>
+            {input.id}
+          </div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -434,22 +373,17 @@ const CreateInvoice: React.FC<props> = ({ panel, handleClick, setPanel }) => {
         </div>
         <div className="w-[100%] h-[20rem] absolute bottom-[5.1rem] left-[0] pointer-events-none overlay z-[1]"></div>
       </div>
-      <div className="relative flex justify-between w-full bg-white dark:bg-secondary-300  pr-[5.6rem] pl-[11.1rem] py-[3.1rem] rounded-br-[20px] rounded-tr-[20px] z-[5]">
-        <Button
-          text={'Discard'}
-          colors={'discardBtn'}
-          handleClick={resetForm}
-        />
+      <div className="relative flex justify-end w-full bg-white dark:bg-secondary-300  pr-[5.6rem] pl-[11.1rem] py-[3.1rem] rounded-br-[20px] rounded-tr-[20px] z-[5]">
         <div className="flex gap-x-[0.8rem] ">
           <Button
-            text={'Save as Draft'}
-            colors={'saveAsDraftBtn'}
-            handleClick={() => handleSave('draft')}
+            text={'Cancel'}
+            colors={'discardBtn'}
+            handleClick={resetForm}
           />
           <Button
-            text={'Save & Send'}
+            text={'Save Changes'}
             colors={'saveAndSendBtn'}
-            handleClick={() => handleSave('pending')}
+            handleClick={handleSave}
           />
         </div>
       </div>
@@ -457,4 +391,4 @@ const CreateInvoice: React.FC<props> = ({ panel, handleClick, setPanel }) => {
   );
 };
 
-export default CreateInvoice;
+export default EditInvoice;

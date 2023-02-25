@@ -181,7 +181,7 @@
     @apply text-white bg-primary-50 hover:bg-tertiary-100;
   }
 
-  .saveBtn {
+  .discardBtn {
     @apply text-primary-400  bg-primary-600 dark:text-primary-200 dark:bg-secondary-100;
   }
 
