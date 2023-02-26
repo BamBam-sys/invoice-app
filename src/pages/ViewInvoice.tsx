@@ -174,18 +174,24 @@ const ViewInvoice: React.FC = () => {
             </div>
             {/* section three (mobile) */}
           </div>
-          <div className="flex ss:hidden items-center justify-between bg-variant py-[2.2rem] px-[2.4rem] mt-[5.6rem] ">
-            <Button text={'Edit'} colors={'editBtn'} handleClick={() => {}} />
+          <div className="flex ss:hidden items-center justify-around bg-variant py-[2.2rem] px-[4rem] xs:px-[8rem] mt-[5.6rem] ">
+            <Button
+              text={'Edit'}
+              colors={'editBtn'}
+              handleClick={handleClick}
+            />{' '}
             <Button
               text={'Delete'}
               colors={'deleteBtn'}
-              handleClick={() => {}}
+              handleClick={() => setModal(true)}
             />
-            <Button
-              text={'Mark as Paid'}
-              colors={'markBtn'}
-              handleClick={() => {}}
-            />
+            {invoice.status === 'paid' ? null : (
+              <Button
+                text={'Mark as Paid'}
+                colors={'markBtn'}
+                handleClick={markInvoiceAsPaid}
+              />
+            )}
           </div>
         </div>
       )}

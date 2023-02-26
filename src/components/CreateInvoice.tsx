@@ -434,13 +434,13 @@ const CreateInvoice: React.FC<props> = ({ panel, handleClick, setPanel }) => {
         </div>
         <div className="w-[100%] h-[20rem] absolute bottom-[5.1rem] left-[0] pointer-events-none overlay z-[1]"></div>
       </div>
-      <div className="relative flex justify-between w-full bg-white dark:bg-secondary-300  pr-[5.6rem] pl-[11.1rem] py-[3.1rem] rounded-br-[20px] rounded-tr-[20px] z-[5]">
+      <div className="relative flex justify-between flex-col ss:flex-row gap-[0.8rem]  w-full bg-white dark:bg-secondary-300  pr-[5.6rem] sm:pr-[2rem] xs:pl-[5.1rem] sm:pl-[9.1rem] md:pl-[11.1rem] pl-[2.4rem] py-[3.1rem] rounded-br-[20px] rounded-tr-[20px] z-[5]">
         <Button
           text={'Discard'}
           colors={'discardBtn'}
           handleClick={resetForm}
         />
-        <div className="flex gap-x-[0.8rem] ">
+        <div className="flex gap-[0.8rem] flex-col ss:flex-row ">
           <Button
             text={'Save as Draft'}
             colors={'saveAsDraftBtn'}

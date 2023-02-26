@@ -153,7 +153,7 @@ const EditInvoice = ({ panel, handleClick, setPanel }: props) => {
   return (
     <div
       ref={ref}
-      className={`bg-white dark:bg-secondary-300 transform ${panelStyles} absolute xs:w-[70%] sm:w-[60%] md:w-[50%] h-[calc(100vh-7.2rem)]  sm:h-[100vh] sm:mt-[0] mt-[7.2rem] xs:rounded-tr-[20px] xs:rounded-br-[20px] z-[2]`}
+      className={`bg-white dark:bg-secondary-300 transform ${panelStyles} absolute xs:w-[70%] sm:w-[60%] md:w-[50%] h-[100vh]  sm:h-[100vh] sm:mt-[0] mt-[7.2rem] xs:rounded-tr-[20px] xs:rounded-br-[20px] z-[2]`}
     >
       <div className="h-[86%] p-[2.4rem]  sm:pl-[11rem]">
         <div className="flex justify-between items-center mb-[2.4rem]">
@@ -373,7 +373,7 @@ const EditInvoice = ({ panel, handleClick, setPanel }: props) => {
         </div>
         <div className="w-[100%] h-[20rem] absolute bottom-[5.1rem] left-[0] pointer-events-none overlay z-[1]"></div>
       </div>
-      <div className="relative flex justify-end w-full bg-white dark:bg-secondary-300  pr-[5.6rem] pl-[11.1rem] py-[3.1rem] rounded-br-[20px] rounded-tr-[20px] z-[5]">
+      <div className="relative flex justify-end w-full bg-white dark:bg-secondary-300  pr-[5.6rem]  py-[3.1rem] rounded-br-[20px] rounded-tr-[20px] z-[5]">
         <div className="flex gap-x-[0.8rem] ">
           <Button
             text={'Cancel'}
